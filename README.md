@@ -1,70 +1,175 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <img src="https://i.imgur.com/WdGink9.png" alt="Logo do BJJ Academy" width="220" />
 
-## Available Scripts
+  <h1>BJJ Academy 🥋</h1>
+  <p>Plataforma de gerenciamento para academias de Jiu-Jitsu Brasileiro.</p>
 
-In the project directory, you can run:
+  <p align="center">
+    <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="Status do Projeto" />
+    <img src="https://img.shields.io/github/license/seu-usuario/bjj-academy" alt="Licença" />
+    <img src="https://img.shields.io/badge/react-18.x-blue" alt="React Version" />
+    <img src="https://img.shields.io/badge/Supabase-PostgreSQL-green" alt="Supabase" />
+  </p>
+</div>
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🖼️ Preview da Interface
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🧱 **Em Breve**
+<img src="https://via.placeholder.com/800x400.png?text=Screenshot+da+Aplicacao+BJJ+Academy" alt="Preview da Aplicação" />
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Tecnologias
 
-### `npm run build`
+- ⚛️ **React** – Interface moderna e responsiva
+- 🔐 **Supabase** – Autenticação e banco de dados PostgreSQL
+- 📦 **Context API** – Gerenciamento global de autenticação
+- 🧱 **Componentização** – Arquitetura organizada com componentes reutilizáveis
+- 📁 **Estrutura MVC** – Separação clara entre lógica e visual
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🔐 Funcionalidades Atuais
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+No momento, o projeto está em fase inicial de desenvolvimento. Já implementamos:
 
-### `npm run eject`
+- ✅ **Login com e-mail e senha** (autenticação conectada ao Supabase)
+- ✅ **Estrutura base com React + Supabase**
+- ✅ **Algumas telas iniciais para testes de UI**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+> ⚠️ Nesta versão `v0.0.1`, o foco está na estruturação da base do sistema de autenticação.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🎯 Objetivos da Versão `v0.0.1`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Nesta fase, estamos trabalhando nas seguintes funcionalidades essenciais:
 
-## Learn More
+- [x] Tela de login
+- [ ] Tela de cadastro de usuário (instrutores/alunos)
+- [ ] Tela de redefinição de senha
+- [ ] Validação de sessão ativa (usuário logado permanece conectado)
+- [ ] Página inicial (home) com layout base do perfil do usuário
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+> 💡 Após a finalização do fluxo de autenticação, iniciaremos a construção da **primeira versão da tela inicial**, que servirá como base para o restante da aplicação.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🚀 Funcionalidades Futuras (Roadmap)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Estas são funcionalidades planejadas para as próximas versões do projeto:
 
-### Analyzing the Bundle Size
+### 🔧 Funcionalidades Core
+- Cadastro e gerenciamento de alunos
+- Estrutura de graduações (faixas, categorias etárias e hierarquias)
+- Criação e organização de turmas
+- Diferenciação de acesso entre instrutor e aluno
+- Interface amigável e voltada para a realidade do BJJ
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 🧠 Planejamento de Expansão
+- ✅ Painel administrativo com permissões
+- 📊 Dashboard com métricas da academia
+- 📱 Interface responsiva para mobile
+- 🔔 Sistema de notificações (promoções, eventos, vencimentos)
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📦 Stack Utilizada
 
-### Advanced Configuration
+- **Frontend:** React.js
+- **Backend as a Service:** Supabase (PostgreSQL, Auth, Storage)
+- **Gerenciamento de estado/contexto:** Context API
+- **Estilização:** (futuramente) TailwindCSS / ShadCN UI
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 📦 Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+npm install       # Instala as dependências
+npm start         # Inicia o app em modo de desenvolvimento
+npm test          # Executa os testes automatizados
+npm run build     # Cria a build de produção
+npm run eject     # Expõe configurações internas (irreversível)
+```
+---
 
-### `npm run build` fails to minify
+## 📁 Estrutura de Diretórios
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+BJJ-ACADEMY/
+│
+├── node_modules/              # Dependências instaladas via npm
+│
+├── public/                    # Arquivos públicos acessíveis diretamente pelo navegador
+│
+├── src/                       # Diretório principal de código-fonte da aplicação
+│   ├── assets/                # Recursos estáticos da aplicação
+│   │   ├── icons/             # Ícones utilizados na UI
+│   │   └── images/            # Imagens usadas na aplicação
+│   │
+│   ├── components/            # Componentes reutilizáveis da interface
+│   │   ├── common/            # Componentes genéricos (botões, inputs, etc)
+│   │   ├── features/          # Componentes voltados para funcionalidades específicas
+│   │   └── layout/            # Componentes relacionados ao layout (navbar, footer, etc)
+│   │
+│   ├── contexts/              # Contextos React para gerenciamento de estado global
+│   │   └── AuthContext.js     # Contexto de autenticação do usuário
+│   │
+│   ├── hooks/                 # Hooks customizados React
+│
+│   ├── models/                # Modelos de dados utilizados no frontend
+│   │   └── userModel.js       # Modelo de dados para o usuário
+│
+│   ├── services/              # Serviços de integração com APIs ou back-end
+│   │   ├── authService.js     # Lógica de autenticação
+│   │   └── supabaseClient.js  # Instância do cliente Supabase
+│
+│   ├── utils/                 # Funções utilitárias auxiliares
+│
+│   ├── views/                 # Páginas principais da aplicação
+│   │   ├── HomeView.js        # Página inicial
+│   │   ├── LoginView.js       # Página de login
+│   │   └── RegisterView.js    # Página de cadastro
+│
+│   ├── App.css                # Estilos globais da aplicação
+│   ├── App.js                 # Componente raiz da aplicação
+│   ├── App.test.js            # Testes da aplicação
+│   ├── index.css              # Estilos da página index
+│   ├── index.js               # Ponto de entrada principal (renderização do React)
+│   ├── logo.svg               # Logo da aplicação
+│   ├── reportWebVitals.js     # Medição de performance (opcional)
+│   ├── routes.js              # Definição das rotas da aplicação
+│   └── setupTests.js          # Configuração para testes
+│
+├── .gitattributes             # Configurações específicas do Git
+├── .gitignore                 # Arquivos/diretórios ignorados pelo Git
+├── package.json               # Dependências e scripts do projeto
+├── package-lock.json          # Versões exatas das dependências instaladas
+├── README.md                  # Documentação principal do projeto
+└── README.old.md              # Versão anterior do README (backup ou histórico)
+
+```
+
+---
+
+> Projeto em desenvolvimento contínuo. Feedbacks e contribuições são bem-vindos! 👊
+
+---
+
+## 📄 Licença
+
+Este projeto está sob uma licença personalizada de uso privado.  
+© 2025 Bruno Alves Franca — Todos os direitos reservados.
+
+Entre em contato para uso comercial ou autorização: [contatobalvesfranca@gmail.com]
+
+---
+
+## 👨‍💻 Autor
+
+Feito com 💙 por [Bruno Alves Franca](https://github.com/balvesfranca)  
+📸 Instagram: [@balvesfranca](https://instagram.com/balvesfranca)
