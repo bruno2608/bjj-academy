@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.js';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginView = () => {
   const [email, setEmail] = useState('');
@@ -9,17 +10,15 @@ const LoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
-  // Usando o hook de autenticação
+  const [showPassword, setShowPassword] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Verificar se há mensagem de sucesso do registro
   useEffect(() => {
     if (location.state && location.state.message) {
       setSuccessMessage(location.state.message);
-      // Limpar a mensagem do histórico para não reaparecer em refresh
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -28,26 +27,21 @@ const LoginView = () => {
     e.preventDefault();
     setError('');
     setSuccessMessage('');
-    
-    // Validação básica
+
     if (!email.trim()) {
       setError('Por favor, informe seu e-mail');
       return;
     }
-    
+
     if (!password) {
       setError('Por favor, informe sua senha');
       return;
     }
-    
-    // Iniciar processo de login
+
     setIsLoading(true);
-    
+
     try {
-      // Tenta fazer login usando o contexto de autenticação
       await login(email, password);
-      
-      // Redireciona para a página inicial após login bem-sucedido
       navigate('/home');
     } catch (err) {
       setError(err.message || 'Erro ao fazer login');
@@ -57,22 +51,21 @@ const LoginView = () => {
   };
 
   return (
-    <div style={{ 
+    <div style={{
       backgroundColor: '#f0f0f5',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       height: '100vh',
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* Cabeçalho */}
-      <div style={{ 
-        backgroundColor: '#1e3a8a', 
+      <div style={{
+        backgroundColor: '#1e3a8a',
         padding: '20px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <div style={{ 
+        <div style={{
           width: '60px',
           height: '60px',
           borderRadius: '12px',
@@ -86,16 +79,16 @@ const LoginView = () => {
           <div style={{ fontSize: '28px' }}>🥋</div>
         </div>
         <div>
-          <h1 style={{ 
-            color: '#fff', 
-            margin: 0, 
+          <h1 style={{
+            color: '#fff',
+            margin: 0,
             fontSize: '24px',
-            fontWeight: 'bold' 
+            fontWeight: 'bold'
           }}>
             BJJ Academy
           </h1>
-          <p style={{ 
-            color: 'rgba(255,255,255,0.8)', 
+          <p style={{
+            color: 'rgba(255,255,255,0.8)',
             margin: '4px 0 0 0',
             fontSize: '14px'
           }}>
@@ -103,16 +96,15 @@ const LoginView = () => {
           </p>
         </div>
       </div>
-      
-      {/* Conteúdo */}
-      <div style={{ 
+
+      <div style={{
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         padding: '0 20px'
       }}>
-        <div style={{ 
+        <div style={{
           backgroundColor: '#fff',
           borderRadius: '8px',
           padding: '24px',
@@ -121,16 +113,16 @@ const LoginView = () => {
           margin: '0 auto',
           boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
         }}>
-          <h2 style={{ 
+          <h2 style={{
             textAlign: 'center',
             fontSize: '20px',
             margin: '0 0 24px 0'
           }}>
             Acesse sua conta
           </h2>
-          
+
           {error && (
-            <div style={{ 
+            <div style={{
               backgroundColor: '#ffebee',
               color: '#c62828',
               padding: '12px',
@@ -141,9 +133,9 @@ const LoginView = () => {
               {error}
             </div>
           )}
-          
+
           {successMessage && (
-            <div style={{ 
+            <div style={{
               backgroundColor: '#e8f5e9',
               color: '#2e7d32',
               padding: '12px',
@@ -154,12 +146,12 @@ const LoginView = () => {
               {successMessage}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '16px' }}>
-              <label 
-                htmlFor="email" 
-                style={{ 
+              <label
+                htmlFor="email"
+                style={{
                   display: 'block',
                   marginBottom: '6px',
                   fontSize: '14px',
@@ -184,11 +176,11 @@ const LoginView = () => {
                 }}
               />
             </div>
-            
+
             <div style={{ marginBottom: '16px' }}>
-              <label 
-                htmlFor="password" 
-                style={{ 
+              <label
+                htmlFor="password"
+                style={{
                   display: 'block',
                   marginBottom: '6px',
                   fontSize: '14px',
@@ -197,24 +189,49 @@ const LoginView = () => {
               >
                 Senha
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Sua senha"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  fontSize: '16px',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  boxSizing: 'border-box'
-                }}
-              />
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Sua senha"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    fontSize: '16px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '0 5px',
+                    color: '#666',
+                    zIndex: 2
+                  }}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
-            
-            <div style={{ 
+
+            <div style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -230,19 +247,19 @@ const LoginView = () => {
                     marginRight: '8px'
                   }}
                 />
-                <label 
-                  htmlFor="remember" 
-                  style={{ 
+                <label
+                  htmlFor="remember"
+                  style={{
                     fontSize: '14px'
                   }}
                 >
                   Lembrar-me
                 </label>
               </div>
-              
-              <a 
-                href="#" 
-                style={{ 
+
+              <a
+                href="#"
+                style={{
                   color: '#1e3a8a',
                   textDecoration: 'none',
                   fontSize: '14px'
@@ -251,7 +268,7 @@ const LoginView = () => {
                 Esqueci minha senha
               </a>
             </div>
-            
+
             <button
               type="submit"
               disabled={isLoading}
@@ -271,17 +288,17 @@ const LoginView = () => {
               {isLoading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
-          
-          <div style={{ 
+
+          <div style={{
             marginTop: '24px',
             textAlign: 'center',
             fontSize: '14px',
             color: '#666'
           }}>
             Não tem uma conta?{' '}
-            <a 
-              href="/register" 
-              style={{ 
+            <a
+              href="/register"
+              style={{
                 color: '#1e3a8a',
                 textDecoration: 'none',
                 fontWeight: '500'
@@ -291,8 +308,8 @@ const LoginView = () => {
             </a>
           </div>
         </div>
-        
-        <div style={{ 
+
+        <div style={{
           margin: '24px auto 0',
           maxWidth: '400px',
           width: '100%',
@@ -321,9 +338,8 @@ const LoginView = () => {
           </button>
         </div>
       </div>
-      
-      {/* Rodapé */}
-      <div style={{ 
+
+      <div style={{
         padding: '16px',
         textAlign: 'center',
         color: '#666',
@@ -331,9 +347,9 @@ const LoginView = () => {
       }}>
         BJJ Academy © 2025 • Todos os direitos reservados
         <div style={{ marginTop: '4px' }}>
-          <a 
-            href="#" 
-            style={{ 
+          <a
+            href="#"
+            style={{
               color: '#666',
               textDecoration: 'none',
               margin: '0 8px'
@@ -342,9 +358,9 @@ const LoginView = () => {
             Termos de Uso
           </a>
           •
-          <a 
-            href="#" 
-            style={{ 
+          <a
+            href="#"
+            style={{
               color: '#666',
               textDecoration: 'none',
               margin: '0 8px'

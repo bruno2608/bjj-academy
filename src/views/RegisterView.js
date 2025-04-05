@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext.js';
 
 const RegisterView = () => {
@@ -16,6 +17,8 @@ const RegisterView = () => {
   const [error, setError] = useState('');
   const [step, setStep] = useState(1); // 1: Dados básicos, 2: Dados complementares
   const [passwordStrength, setPasswordStrength] = useState(0); // 0: Fraca, 1: Média, 2: Forte
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -398,22 +401,47 @@ const RegisterView = () => {
                   >
                     Senha *
                   </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Mínimo de 6 caracteres"
+                  <div style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Mínimo de 6 caracteres"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        paddingRight: '40px', // Espaço para o botão de mostrar/ocultar
+                        fontSize: '16px',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                    <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
                     style={{
-                      width: '100%',
-                      padding: '12px',
-                      fontSize: '16px',
-                      border: '1px solid #ddd',
-                      borderRadius: '4px',
-                      boxSizing: 'border-box'
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '0 5px',
+                      zIndex: 2
                     }}
-                  />
+                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  >
+                    {showPassword ? <EyeOff size={18} color="#666" /> : <Eye size={18} color="#666" />}
+                  </button>
+                  </div>
                 </div>
                 
                 {/* Indicador de força da senha */}
@@ -467,7 +495,6 @@ const RegisterView = () => {
                     </div>
                   </div>
                 )}
-                
                 <div style={{ marginBottom: '16px' }}>
                   <label 
                     htmlFor="confirmPassword" 
@@ -480,23 +507,46 @@ const RegisterView = () => {
                   >
                     Confirme a senha *
                   </label>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Digite a senha novamente"
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      fontSize: '16px',
-                      border: '1px solid #ddd',
-                      borderRadius: '4px',
-                      boxSizing: 'border-box'
-                    }}
-                  />
+                  <div style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="Digite a senha novamente"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        paddingRight: '40px', // Espaço para o botão de mostrar/ocultar
+                        fontSize: '16px',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '12px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '0 5px'
+                      }}
+                      aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} color="#666" /> : <Eye size={18} color="#666" />}
+                    </button>
+                  </div>
                 </div>
+
               </>
             ) : (
               <>
