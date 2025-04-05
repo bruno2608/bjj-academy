@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.js';
 
 const LoginView = () => {
@@ -8,14 +8,26 @@ const LoginView = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
   // Usando o hook de autenticação
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Verificar se há mensagem de sucesso no estado da navegação
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Limpa o estado da navegação para não mostrar a mensagem novamente em atualizações futuras
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     
     // Validação básica
     if (!email.trim()) {
@@ -32,16 +44,27 @@ const LoginView = () => {
     setIsLoading(true);
     
     try {
+      console.log("Iniciando login para:", email);
       // Tenta fazer login usando o contexto de autenticação
       await login(email, password);
       
+      console.log("Login bem-sucedido, redirecionando...");
       // Redireciona para a página inicial após login bem-sucedido
       navigate('/home');
     } catch (err) {
+      console.error("Erro no login:", err);
       setError(err.message || 'Erro ao fazer login');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRegisterClick = () => {
+    console.log('Clicou em "Cadastre-se" - Navegando para /register');
+    // Usando um timeout pode ajudar a evitar problemas de sincronização
+    setTimeout(() => {
+      navigate('/register', { replace: true });
+    }, 100);
   };
 
   return (
@@ -116,6 +139,19 @@ const LoginView = () => {
           }}>
             Acesse sua conta
           </h2>
+          
+          {successMessage && (
+            <div style={{ 
+              backgroundColor: '#e8f5e9',
+              color: '#2e7d32',
+              padding: '12px',
+              borderRadius: '4px',
+              marginBottom: '16px',
+              fontSize: '14px'
+            }}>
+              {successMessage}
+            </div>
+          )}
           
           {error && (
             <div style={{ 
@@ -254,16 +290,17 @@ const LoginView = () => {
             color: '#666'
           }}>
             Não tem uma conta?{' '}
-            <a 
-              href="/register" 
+            <span 
+              onClick={handleRegisterClick}
               style={{ 
                 color: '#1e3a8a',
                 textDecoration: 'none',
-                fontWeight: '500'
+                fontWeight: '500',
+                cursor: 'pointer'
               }}
             >
               Cadastre-se
-            </a>
+            </span>
           </div>
         </div>
         
@@ -276,8 +313,8 @@ const LoginView = () => {
         }}>
           <button
             onClick={() => {
-              setEmail('admin@bjjacademy.com');
-              setPassword('123456');
+              setEmail('adminhml@bjjacademy.com.br');
+              setPassword('Bjj@123');
             }}
             style={{
               padding: '8px 16px',

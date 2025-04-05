@@ -65,10 +65,15 @@ export const authenticate = async (email, password) => {
  */
 export const registerUser = async (userData) => {
   try {
+    console.log("Iniciando registro do usuário:", userData.email);
+    
+    // Extrai password e mantém o resto dos dados do usuário
+    const { password, ...userInfo } = userData;
+    
     // Registra o usuário no auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userData.email,
-      password: userData.password,
+      password: password,
       options: {
         data: {
           full_name: userData.nome
@@ -76,19 +81,67 @@ export const registerUser = async (userData) => {
       }
     });
 
-    if (authError) throw new Error(authError.message);
+    if (authError) {
+      console.error("Erro na autenticação:", authError);
+      throw new Error(authError.message);
+    }
 
-    // O trigger no Supabase já cria automaticamente o usuário e atribui o papel de aluno
-    // Apenas aguardamos um pouco para garantir que o trigger foi executado
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("Usuário registrado no auth:", authData);
 
-    // Busca o usuário criado
-    const { data: newUser, error: userError } = await supabase
-      .rpc('get_my_user');
+    // Aguarda um momento para o trigger criar o registro na tabela usuarios
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    if (userError) throw new Error(userError.message);
+    // Verifica se o usuário foi corretamente registrado
+    const { data: checkUser, error: checkError } = await supabase
+      .from('usuarios')
+      .select('id, email')
+      .eq('email', userData.email)
+      .single();
+    
+    if (checkError) {
+      console.warn("Erro ao verificar registro do usuário:", checkError);
+    } else {
+      console.log("Usuário encontrado na tabela usuarios:", checkUser);
+    }
 
-    return newUser[0];
+    // Se fornecidos dados adicionais, atualiza o registro do usuário
+    if (userInfo.telefone || userInfo.data_nascimento || userInfo.genero) {
+      // Busca o ID do usuário pelo email
+      const { data: userData, error: userError } = await supabase
+        .from('usuarios')
+        .select('id')
+        .eq('email', userInfo.email)
+        .single();
+      
+      if (userError) {
+        console.warn('Erro ao buscar ID do usuário:', userError);
+      } else if (userData) {
+        console.log("Atualizando dados complementares para o usuário:", userData.id);
+        
+        // Atualiza os dados complementares
+        const { error: updateError } = await supabase
+          .from('usuarios')
+          .update({
+            telefone: userInfo.telefone || null,
+            data_nascimento: userInfo.data_nascimento || null,
+            genero: userInfo.genero || null
+          })
+          .eq('id', userData.id);
+        
+        if (updateError) {
+          console.warn('Erro ao atualizar dados do usuário:', updateError);
+        }
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Usuário registrado com sucesso',
+      user: {
+        email: userData.email,
+        nome: userData.nome
+      }
+    };
   } catch (error) {
     console.error('Erro ao registrar usuário:', error);
     throw new Error(error.message || 'Erro ao registrar usuário');

@@ -53,9 +53,15 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     
     try {
-      const newUser = await authService.registerUser(userData);
-      return createUser(newUser);
+      console.log("Iniciando registro no AuthContext:", userData.email);
+      const result = await authService.registerUser(userData);
+      console.log("Resultado do registro:", result);
+      
+      // Não fazemos login automático após o registro
+      // O usuário é redirecionado para a tela de login
+      return result;
     } catch (err) {
+      console.error("Erro no registro:", err);
       setError(err.message);
       throw err;
     } finally {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext.js';
 
 const RegisterView = () => {
   const [formData, setFormData] = useState({
@@ -67,6 +67,11 @@ const RegisterView = () => {
     setStep(1);
   };
 
+  const handleNavigateToLogin = () => {
+    console.log('Navegando para /login');
+    navigate('/login');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -81,7 +86,13 @@ const RegisterView = () => {
     setIsLoading(true);
     
     try {
-      await register({
+      console.log("Enviando dados de registro:", {
+        nome: formData.nome,
+        email: formData.email,
+        password: formData.password
+      });
+      
+      const result = await register({
         nome: formData.nome,
         email: formData.email,
         password: formData.password,
@@ -90,9 +101,16 @@ const RegisterView = () => {
         genero: formData.genero || null
       });
       
-      // Redireciona para a página inicial após registro bem-sucedido
-      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça o login para continuar.' } });
+      console.log("Resultado do registro:", result);
+      
+      // Redireciona para a página de login após registro bem-sucedido
+      navigate('/login', { 
+        state: { 
+          message: 'Cadastro realizado com sucesso! Faça o login para continuar.' 
+        } 
+      });
     } catch (err) {
+      console.error("Erro no envio do formulário:", err);
       setError(err.message || 'Erro ao registrar usuário');
     } finally {
       setIsLoading(false);
@@ -508,16 +526,22 @@ const RegisterView = () => {
             color: '#666'
           }}>
             Já tem uma conta?{' '}
-            <a 
-              href="/login" 
+            <span 
+              onClick={() => {
+                console.log('Navegando de volta para /login');
+                setTimeout(() => {
+                  navigate('/login', { replace: true });
+                }, 100);
+              }}
               style={{ 
                 color: '#1e3a8a',
                 textDecoration: 'none',
-                fontWeight: '500'
+                fontWeight: '500',
+                cursor: 'pointer'
               }}
             >
               Faça login
-            </a>
+            </span>
           </div>
         </div>
       </div>
