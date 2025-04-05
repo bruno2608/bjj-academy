@@ -7,7 +7,7 @@
 
   <p align="center">
     <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="Status do Projeto" />
-    <img src="https://img.shields.io/github/license/seu-usuario/bjj-academy" alt="Licença" />
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-BJJ--Academy-blueviolet" alt="Licença" /></a>
     <img src="https://img.shields.io/badge/react-18.x-blue" alt="React Version" />
     <img src="https://img.shields.io/badge/Supabase-PostgreSQL-green" alt="Supabase" />
   </p>
@@ -165,7 +165,7 @@ BJJ-ACADEMY/
 Este projeto está sob uma licença personalizada de uso privado.  
 © 2025 Bruno Alves Franca — Todos os direitos reservados.
 
-Entre em contato para uso comercial ou autorização: [contatobalvesfranca@gmail.com]
+Entre em contato para uso comercial ou autorização: [contatobalvesfranca@gmail.com](mailto:contatobalvesfranca@gmail.com)
 
 ---
 
@@ -173,3 +173,4 @@ Entre em contato para uso comercial ou autorização: [contatobalvesfranca@gmail
 
 Feito com 💙 por [Bruno Alves Franca](https://github.com/balvesfranca)  
 📸 Instagram: [@balvesfranca](https://instagram.com/balvesfranca)
+    
