@@ -15,16 +15,89 @@ const RegisterView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [step, setStep] = useState(1); // 1: Dados básicos, 2: Dados complementares
+  const [passwordStrength, setPasswordStrength] = useState(0); // 0: Fraca, 1: Média, 2: Forte
   
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Função para formatar o telefone
+  const formatPhone = (value) => {
+    // Remove todos os caracteres não numéricos
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos (DDD + 9 dígitos)
+    const limitedNumbers = numbers.slice(0, 11);
+    
+    // Aplica a máscara de telefone
+    if (limitedNumbers.length <= 2) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 7) {
+      return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2)}`;
+    } else {
+      return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2, 7)}-${limitedNumbers.slice(7)}`;
+    }
+  };
+
+  // Função para validar força da senha
+  const checkPasswordStrength = (password) => {
+    let strength = 0;
+    
+    // Verifica se tem pelo menos 6 caracteres
+    if (password.length >= 6) strength += 1;
+    
+    // Verifica se tem pelo menos 8 caracteres
+    if (password.length >= 8) strength += 1;
+    
+    // Verifica se tem letras maiúsculas e minúsculas
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+    
+    // Verifica se tem números
+    if (/[0-9]/.test(password)) strength += 1;
+    
+    // Verifica se tem caracteres especiais
+    if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+    
+    // Classificação da força (0-1: fraca, 2-3: média, 4-5: forte)
+    if (strength <= 1) return 0;
+    if (strength <= 3) return 1;
+    return 2;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    if (name === 'telefone') {
+      // Aplica a formatação para telefone
+      setFormData(prev => ({
+        ...prev,
+        [name]: formatPhone(value)
+      }));
+    } else if (name === 'password') {
+      // Atualiza a força da senha
+      setPasswordStrength(checkPasswordStrength(value));
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    } else {
+      // Comportamento normal para outros campos
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const validateEmail = (email) => {
+    // Padrão de validação de email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    // Verifica se o telefone está no formato correto: (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
+    const phonePattern = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+    return phonePattern.test(phone);
   };
 
   const validateStep1 = () => {
@@ -33,7 +106,7 @@ const RegisterView = () => {
       return false;
     }
     
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.email.trim() || !validateEmail(formData.email)) {
       setError('Por favor, informe um e-mail válido');
       return false;
     }
@@ -48,8 +121,22 @@ const RegisterView = () => {
       return false;
     }
     
+    if (passwordStrength === 0) {
+      setError('Sua senha é muito fraca. Adicione letras maiúsculas, números ou símbolos.');
+      return false;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       setError('As senhas não coincidem');
+      return false;
+    }
+    
+    return true;
+  };
+
+  const validateStep2 = () => {
+    if (!formData.telefone || !validatePhone(formData.telefone)) {
+      setError('Por favor, informe um telefone válido no formato (XX) XXXXX-XXXX');
       return false;
     }
     
@@ -64,12 +151,8 @@ const RegisterView = () => {
   };
 
   const handlePrevStep = () => {
+    setError('');
     setStep(1);
-  };
-
-  const handleNavigateToLogin = () => {
-    console.log('Navegando para /login');
-    navigate('/login');
   };
 
   const handleSubmit = async (e) => {
@@ -77,22 +160,20 @@ const RegisterView = () => {
     setError('');
     
     if (step === 1) {
+      // No passo 1, o botão Próximo deve chamar handleNextStep, não submeter o formulário
       handleNextStep();
       return;
     }
     
-    // Validações adicionais do passo 2 (opcionais)
+    // Validações do passo 2
+    if (!validateStep2()) {
+      return;
+    }
     
     setIsLoading(true);
     
     try {
-      console.log("Enviando dados de registro:", {
-        nome: formData.nome,
-        email: formData.email,
-        password: formData.password
-      });
-      
-      const result = await register({
+      await register({
         nome: formData.nome,
         email: formData.email,
         password: formData.password,
@@ -101,16 +182,9 @@ const RegisterView = () => {
         genero: formData.genero || null
       });
       
-      console.log("Resultado do registro:", result);
-      
-      // Redireciona para a página de login após registro bem-sucedido
-      navigate('/login', { 
-        state: { 
-          message: 'Cadastro realizado com sucesso! Faça o login para continuar.' 
-        } 
-      });
+      // Redireciona para a página inicial após registro bem-sucedido
+      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça o login para continuar.' } });
     } catch (err) {
-      console.error("Erro no envio do formulário:", err);
       setError(err.message || 'Erro ao registrar usuário');
     } finally {
       setIsLoading(false);
@@ -171,7 +245,8 @@ const RegisterView = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: '0 20px'
+        padding: '0 20px',
+        overflowY: 'auto'
       }}>
         <div style={{ 
           backgroundColor: '#fff',
@@ -179,7 +254,7 @@ const RegisterView = () => {
           padding: '24px',
           maxWidth: '500px',
           width: '100%',
-          margin: '0 auto',
+          margin: '20px auto',
           boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
         }}>
           <h2 style={{ 
@@ -311,7 +386,7 @@ const RegisterView = () => {
                   />
                 </div>
                 
-                <div style={{ marginBottom: '16px' }}>
+                <div style={{ marginBottom: '8px' }}>
                   <label 
                     htmlFor="password" 
                     style={{ 
@@ -340,6 +415,58 @@ const RegisterView = () => {
                     }}
                   />
                 </div>
+                
+                {/* Indicador de força da senha */}
+                {formData.password && (
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ 
+                      display: 'flex',
+                      marginTop: '6px'
+                    }}>
+                      <div style={{ 
+                        height: '4px',
+                        flex: 1,
+                        backgroundColor: passwordStrength >= 0 ? (
+                          passwordStrength === 0 ? '#ef5350' : 
+                          passwordStrength === 1 ? '#ffca28' : '#66bb6a'
+                        ) : '#e0e0e0',
+                        borderRadius: '2px',
+                        marginRight: '4px'
+                      }}></div>
+                      <div style={{ 
+                        height: '4px',
+                        flex: 1,
+                        backgroundColor: passwordStrength >= 1 ? (
+                          passwordStrength === 1 ? '#ffca28' : '#66bb6a'
+                        ) : '#e0e0e0',
+                        borderRadius: '2px',
+                        marginRight: '4px'
+                      }}></div>
+                      <div style={{ 
+                        height: '4px',
+                        flex: 1,
+                        backgroundColor: passwordStrength >= 2 ? '#66bb6a' : '#e0e0e0',
+                        borderRadius: '2px'
+                      }}></div>
+                    </div>
+                    <div style={{ 
+                      fontSize: '12px',
+                      marginTop: '4px',
+                      color: passwordStrength === 0 ? '#c62828' : 
+                              passwordStrength === 1 ? '#f57f17' : '#2e7d32'
+                    }}>
+                      {passwordStrength === 0 ? 'Senha fraca' : 
+                       passwordStrength === 1 ? 'Senha média' : 'Senha forte'}
+                    </div>
+                    <div style={{ 
+                      fontSize: '12px',
+                      marginTop: '2px',
+                      color: '#666'
+                    }}>
+                      Use letras maiúsculas, minúsculas, números e símbolos para maior segurança.
+                    </div>
+                  </div>
+                )}
                 
                 <div style={{ marginBottom: '16px' }}>
                   <label 
@@ -384,7 +511,7 @@ const RegisterView = () => {
                       fontWeight: '500'
                     }}
                   >
-                    Telefone
+                    Telefone *
                   </label>
                   <input
                     id="telefone"
@@ -401,7 +528,15 @@ const RegisterView = () => {
                       borderRadius: '4px',
                       boxSizing: 'border-box'
                     }}
+                    required
                   />
+                  <div style={{ 
+                    fontSize: '12px',
+                    marginTop: '4px',
+                    color: '#666'
+                  }}>
+                    Digite apenas os números, incluindo o DDD.
+                  </div>
                 </div>
                 
                 <div style={{ marginBottom: '16px' }}>
@@ -422,6 +557,7 @@ const RegisterView = () => {
                     type="date"
                     value={formData.dataNascimento}
                     onChange={handleChange}
+                    max={new Date().toISOString().split('T')[0]} // Impede datas futuras
                     style={{
                       width: '100%',
                       padding: '12px',
@@ -431,6 +567,13 @@ const RegisterView = () => {
                       boxSizing: 'border-box'
                     }}
                   />
+                  <div style={{ 
+                    fontSize: '12px',
+                    marginTop: '4px',
+                    color: '#666'
+                  }}>
+                    Usada para verificar requisitos de idade para as turmas.
+                  </div>
                 </div>
                 
                 <div style={{ marginBottom: '16px' }}>
@@ -526,22 +669,16 @@ const RegisterView = () => {
             color: '#666'
           }}>
             Já tem uma conta?{' '}
-            <span 
-              onClick={() => {
-                console.log('Navegando de volta para /login');
-                setTimeout(() => {
-                  navigate('/login', { replace: true });
-                }, 100);
-              }}
+            <a 
+              href="/login" 
               style={{ 
                 color: '#1e3a8a',
                 textDecoration: 'none',
-                fontWeight: '500',
-                cursor: 'pointer'
+                fontWeight: '500'
               }}
             >
               Faça login
-            </span>
+            </a>
           </div>
         </div>
       </div>

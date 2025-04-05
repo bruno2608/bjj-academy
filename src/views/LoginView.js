@@ -15,11 +15,11 @@ const LoginView = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Verificar se há mensagem de sucesso no estado da navegação
+  // Verificar se há mensagem de sucesso do registro
   useEffect(() => {
-    if (location.state?.message) {
+    if (location.state && location.state.message) {
       setSuccessMessage(location.state.message);
-      // Limpa o estado da navegação para não mostrar a mensagem novamente em atualizações futuras
+      // Limpar a mensagem do histórico para não reaparecer em refresh
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -44,27 +44,16 @@ const LoginView = () => {
     setIsLoading(true);
     
     try {
-      console.log("Iniciando login para:", email);
       // Tenta fazer login usando o contexto de autenticação
       await login(email, password);
       
-      console.log("Login bem-sucedido, redirecionando...");
       // Redireciona para a página inicial após login bem-sucedido
       navigate('/home');
     } catch (err) {
-      console.error("Erro no login:", err);
       setError(err.message || 'Erro ao fazer login');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleRegisterClick = () => {
-    console.log('Clicou em "Cadastre-se" - Navegando para /register');
-    // Usando um timeout pode ajudar a evitar problemas de sincronização
-    setTimeout(() => {
-      navigate('/register', { replace: true });
-    }, 100);
   };
 
   return (
@@ -140,19 +129,6 @@ const LoginView = () => {
             Acesse sua conta
           </h2>
           
-          {successMessage && (
-            <div style={{ 
-              backgroundColor: '#e8f5e9',
-              color: '#2e7d32',
-              padding: '12px',
-              borderRadius: '4px',
-              marginBottom: '16px',
-              fontSize: '14px'
-            }}>
-              {successMessage}
-            </div>
-          )}
-          
           {error && (
             <div style={{ 
               backgroundColor: '#ffebee',
@@ -163,6 +139,19 @@ const LoginView = () => {
               fontSize: '14px'
             }}>
               {error}
+            </div>
+          )}
+          
+          {successMessage && (
+            <div style={{ 
+              backgroundColor: '#e8f5e9',
+              color: '#2e7d32',
+              padding: '12px',
+              borderRadius: '4px',
+              marginBottom: '16px',
+              fontSize: '14px'
+            }}>
+              {successMessage}
             </div>
           )}
           
@@ -290,17 +279,16 @@ const LoginView = () => {
             color: '#666'
           }}>
             Não tem uma conta?{' '}
-            <span 
-              onClick={handleRegisterClick}
+            <a 
+              href="/register" 
               style={{ 
                 color: '#1e3a8a',
                 textDecoration: 'none',
-                fontWeight: '500',
-                cursor: 'pointer'
+                fontWeight: '500'
               }}
             >
               Cadastre-se
-            </span>
+            </a>
           </div>
         </div>
         
