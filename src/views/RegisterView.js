@@ -82,6 +82,35 @@ const RegisterView = () => {
         ...prev,
         [name]: value
       }));
+      // Certifica-se de que não há elementos indesejados
+      const passwordField = document.getElementById('password');
+      if (passwordField) {
+        const parent = passwordField.parentElement;
+        const buttons = parent.querySelectorAll('button');
+        // Se houver mais de um botão, remove os excedentes
+        if (buttons.length > 1) {
+          for (let i = 1; i < buttons.length; i++) {
+            buttons[i].remove();
+          }
+        }
+      }
+    } else if (name === 'confirmPassword') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+      // Certifica-se de que não há elementos indesejados
+      const confirmPasswordField = document.getElementById('confirmPassword');
+      if (confirmPasswordField) {
+        const parent = confirmPasswordField.parentElement;
+        const buttons = parent.querySelectorAll('button');
+        // Se houver mais de um botão, remove os excedentes
+        if (buttons.length > 1) {
+          for (let i = 1; i < buttons.length; i++) {
+            buttons[i].remove();
+          }
+        }
+      }
     } else {
       // Comportamento normal para outros campos
       setFormData(prev => ({
@@ -401,47 +430,22 @@ const RegisterView = () => {
                   >
                     Senha *
                   </label>
-                  <div style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
-                    <input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Mínimo de 6 caracteres"
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        paddingRight: '40px', // Espaço para o botão de mostrar/ocultar
-                        fontSize: '16px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        boxSizing: 'border-box'
-                      }}
-                    />
-                    <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Mínimo de 6 caracteres"
                     style={{
-                      position: 'absolute',
-                      right: '12px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '0 5px',
-                      zIndex: 2
+                      width: '100%',
+                      padding: '12px',
+                      fontSize: '16px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
                     }}
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                  >
-                    {showPassword ? <EyeOff size={18} color="#666" /> : <Eye size={18} color="#666" />}
-                  </button>
-                  </div>
+                  />
                 </div>
                 
                 {/* Indicador de força da senha */}
@@ -507,44 +511,22 @@ const RegisterView = () => {
                   >
                     Confirme a senha *
                   </label>
-                  <div style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      placeholder="Digite a senha novamente"
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        paddingRight: '40px', // Espaço para o botão de mostrar/ocultar
-                        fontSize: '16px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        boxSizing: 'border-box'
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      style={{
-                        position: 'absolute',
-                        right: '12px',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        padding: '0 5px'
-                      }}
-                      aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
-                    >
-                      {showConfirmPassword ? <EyeOff size={18} color="#666" /> : <Eye size={18} color="#666" />}
-                    </button>
-                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Digite a senha novamente"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      fontSize: '16px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
                 </div>
 
               </>

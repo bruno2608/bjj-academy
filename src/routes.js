@@ -14,7 +14,7 @@ const EvolucaoView = () => <div style={{ padding: 20 }}>Tela de Evolução em de
 
 // Componentes de layout principal para rotas autenticadas
 import Header from './components/layout/Header.js';
-import Navigation from './components/layout/Navigation.js';
+import Navigation from './components/layout/Sidebar.js';
 
 // Componente de layout para rotas protegidas
 const ProtectedLayout = ({ children }) => {
